@@ -30,6 +30,7 @@ export const registerService = async (name, email, password, animes) => {
 
     return handleResponse(201, "success", "Usuário criado com sucesso");
   } catch (error) {
+    console.log(error)
     return handleResponse(500, "error", "Erro interno, tente novamente");
   }
 };

@@ -36,12 +36,7 @@ export const registerController = async (req, res) => {
       body("name").isString().trim().escape().notEmpty().run(req),
       body("email").isString().trim().escape().notEmpty().run(req),
       body("password").isString().trim().escape().notEmpty().run(req),
-      body("anime_preference")
-      .isArray().withMessage("Deve ser um array.")
-      .notEmpty().withMessage("O array não pode estar vazio.")
-      .custom((array) => array.every(item => typeof item === "string"))
-      .withMessage("Todos os itens devem ser strings.")
-      .run(req),
+      body("anime_preference").isString().notEmpty().run(req)
     ]);
 
     const error = validationResult(req);
@@ -55,11 +50,17 @@ export const registerController = async (req, res) => {
 
     const { name, email, password, anime_preference } = req.body;
 
+    let animePreferencesArray = anime_preference;
+
+    if (typeof animePreferencesArray === 'string') {
+      animePreferencesArray = animePreferencesArray.split(',').map(item => item.trim());
+    }
+
     const create = await registerService(
       name,
       email,
       password,
-      anime_preference
+      animePreferencesArray
     );
 
     return res.status(create.code).json(create);
