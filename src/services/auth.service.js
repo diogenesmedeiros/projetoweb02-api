@@ -41,14 +41,28 @@ export const loginService = async (email, password) => {
         email: email,
         password: password,
       },
+      include: {
+        animePreferences: {
+          include: {
+            anime: true,
+          },
+        },
+      },
     });
 
     const userSession = {
-      accessToken: jwt.sign({ uuid: User.uuid }, process.env.SECRET_KEY, {
+      accessToken: jwt.sign({ uuid: user.uuid }, process.env.SECRET_KEY, {
         expiresIn: "7d",
       }),
       user: {
         user_id: user.uuid,
+        name: user.name,
+        email: user.email,
+        animes: user.animePreferences.map((result) => ({
+          id: result.anime.id,
+          title: result.anime.title,
+          cover: result.anime.cover,
+        })),
       },
     };
 
@@ -59,6 +73,7 @@ export const loginService = async (email, password) => {
       userSession
     );
   } catch (error) {
+    console.log(error);
     return handleResponse(500, "error", "Erro no login");
   }
 };

@@ -36,11 +36,17 @@ export const registerController = async (req, res) => {
       body("name").isString().trim().escape().notEmpty().run(req),
       body("email").isString().trim().escape().notEmpty().run(req),
       body("password").isString().trim().escape().notEmpty().run(req),
-      body("anime_preference").isArray().trim().escape().notEmpty().run(req),
+      body("anime_preference")
+      .isArray().withMessage("Deve ser um array.")
+      .notEmpty().withMessage("O array não pode estar vazio.")
+      .custom((array) => array.every(item => typeof item === "string"))
+      .withMessage("Todos os itens devem ser strings.")
+      .run(req),
     ]);
 
     const error = validationResult(req);
     if (!error.isEmpty()) {
+      console.log(error)
       return res.status(400).json({
         status: "error",
         message: "Esses campos estão vazios",

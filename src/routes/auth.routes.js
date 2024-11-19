@@ -4,6 +4,6 @@ import { loginController, registerController } from "../controllers/auth.control
 const router = express.Router();
 
 router.post("/login", (req, res) => loginController(req, res));
-router.post("/regiter", (req, res) => registerController(req, res));
+router.post("/register", (req, res) => registerController(req, res));
 
 export default router;
