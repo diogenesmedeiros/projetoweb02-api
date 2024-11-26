@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import dotenv from "dotenv";
 import cors from "cors";
+import { inject } from "@vercel/analytics"
 
 dotenv.config();
 
@@ -21,10 +22,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
+  inject()
   res.json({ message: "Welcome" });
 });
 
 app.get("/ping", (req, res) => {
+  inject()
   try {
     res.json({ status: "success", message: "Pong" });
   } catch (error) {
