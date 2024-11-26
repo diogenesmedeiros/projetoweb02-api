@@ -11,7 +11,13 @@ export const getUserService = async (uuid) => {
       },
     });
 
-    return handleResponse(200, "success", null, row);
+    const userData = {
+      uuid: row.uuid,
+      name: row.name,
+      email: row.name
+    }
+
+    return handleResponse(200, "success", null, userData);
   } catch (error) {
     return handleResponse(500, "error", "Erro ao busca user");
   }

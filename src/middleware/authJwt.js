@@ -10,7 +10,11 @@ const authJwt = (req, res, next) => {
     if(!token) {
         console.log("Access denied because the user does not have a token")
 
-        return handleResponse(401, "error", "Acesso negado");
+        return res.status(401).json({
+            code: 401,
+            status: "error",
+            message: "Acesso negado",
+        });
     }
 
     try {

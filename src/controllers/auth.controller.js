@@ -36,7 +36,7 @@ export const registerController = async (req, res) => {
       body("name").isString().trim().escape().notEmpty().run(req),
       body("email").isString().trim().escape().notEmpty().run(req),
       body("password").isString().trim().escape().notEmpty().run(req),
-      body("anime_preference").isString().notEmpty().run(req)
+      body("anime_preference").notEmpty().run(req)
     ]);
 
     const error = validationResult(req);
@@ -50,10 +50,16 @@ export const registerController = async (req, res) => {
 
     const { name, email, password, anime_preference } = req.body;
 
-    let animePreferencesArray = anime_preference;
-
-    if (typeof animePreferencesArray === 'string') {
-      animePreferencesArray = animePreferencesArray.split(',').map(item => item.trim());
+    let animePreferencesArray = [];
+    if (typeof anime_preference === "string") {
+      animePreferencesArray = anime_preference.split(",").map(item => item.trim());
+    } else if (Array.isArray(anime_preference)) {
+      animePreferencesArray = anime_preference.map(item => String(item).trim());
+    } else {
+      return res.status(400).json({
+        status: "error",
+        message: "O campo anime_preference deve ser uma string ou um array.",
+      });
     }
 
     const create = await registerService(
