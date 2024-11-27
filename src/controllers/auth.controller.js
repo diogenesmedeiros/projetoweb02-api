@@ -36,7 +36,7 @@ export const registerController = async (req, res) => {
       body("name").isString().trim().escape().notEmpty().run(req),
       body("email").isString().trim().escape().notEmpty().run(req),
       body("password").isString().trim().escape().notEmpty().run(req),
-      body("anime_preference").notEmpty().run(req)
+      body("anime_preference").optional().notEmpty().run(req)
     ]);
 
     const error = validationResult(req);
