@@ -44,7 +44,7 @@ const uploadCover = async (file, fileName) => {
 
 export const createAnimeService = async (title, coverFile) => {
   try {
-    let coverUrl = "https://midias.correiobraziliense.com.br/_midias/jpg/2022/07/18/1000x1000/1_meme_chloe-26068285.jpg";
+    let coverUrl = "https://marketplace.canva.com/EAFSIls90sE/1/0/1600w/canva-meme-gatinho-frase-engra%C3%A7ada-moderno-branco-YTup4mHeHQI.jpg";
 
     if (coverFile != null) {
       const fileName = `${title.replace(/ /g, "_")}_${Date.now()}-${
