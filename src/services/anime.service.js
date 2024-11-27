@@ -34,7 +34,7 @@ const uploadCover = async (file, fileName) => {
       console.log("Arquivo enviado com sucesso:", data);
     }
 
-    const publicUrl = `https://wftmarkvdjxisqailfkf.supabase.co/storage/v1/object/public/animes-cover/${data.path}`
+    const publicUrl = `https://wftmarkvdjxisqailfkf.supabase.co/storage/v1/object/public/animes-cover/${data.path}`;
 
     return publicUrl;
   } catch (error) {
@@ -44,24 +44,66 @@ const uploadCover = async (file, fileName) => {
 
 export const createAnimeService = async (title, coverFile) => {
   try {
-    const fileName = `${title.replace(/ /g, "_")}_${Date.now()}-${coverFile.originalname}`;
-    
-    const coverUrl = await uploadCover(coverFile, fileName);
+    let coverUrl = "https://midias.correiobraziliense.com.br/_midias/jpg/2022/07/18/1000x1000/1_meme_chloe-26068285.jpg";
 
-    await prisma.anime.create({
+    if (coverFile != null) {
+      const fileName = `${title.replace(/ /g, "_")}_${Date.now()}-${
+        coverFile.originalname
+      }`;
+
+      coverUrl = await uploadCover(coverFile, fileName);
+    }
+
+    const row = await prisma.anime.create({
       data: {
         title,
         cover: coverUrl,
       },
     });
 
-    return handleResponse(201, "success", "Anime adicionado com sucesso!");
-  } catch(error) {
-    console.log(error)
+    return handleResponse(201, "success", "Anime adicionado com sucesso!", {
+      anime: { id: row.id },
+    });
+  } catch (error) {
+    console.log(error);
     return handleResponse(
       400,
       "error",
       "Não foi possivel adicionar o anime, verifique os dados e tente novamente!"
+    );
+  }
+};
+
+export const findAnimeByIdOrTitle = async (idOrTitle) => {
+  try {
+    let anime = null;
+
+    if (typeof idOrTitle === "string") {
+      anime = await prisma.anime.findUnique({
+        where: {
+          id: idOrTitle,
+        },
+      });
+    }
+
+    if (!anime) {
+      anime = await prisma.anime.findUnique({
+        where: {
+          title: idOrTitle,
+        },
+      });
+    }
+
+    if (!anime) {
+      return null;
+    }
+
+    return anime;
+  } catch (error) {
+    return handleResponse(
+      400,
+      "error",
+      "Não foi possível buscar os animes, tente novamente!"
     );
   }
 };
@@ -78,7 +120,7 @@ export const getAnimeService = async () => {
       );
     }
 
-    return handleResponse(200, "success", null, {animes: animes});
+    return handleResponse(200, "success", null, { animes: animes });
   } catch {
     return handleResponse(
       400,
