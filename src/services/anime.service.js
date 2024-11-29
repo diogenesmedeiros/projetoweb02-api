@@ -51,7 +51,7 @@ export const createAnimeService = async (title, coverFile) => {
       return handleResponse(
         400,
         "error",
-        `O título não é permitido.`
+        "O título não é permitido."
       );
     }
 
@@ -63,10 +63,14 @@ export const createAnimeService = async (title, coverFile) => {
       coverUrl = await uploadCover(coverFile, fileName);
     }
 
+    const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    const userIp = ip.split(',')[0]; 
+
     const row = await prisma.anime.create({
       data: {
         title,
         cover: coverUrl,
+        ip: ip
       },
     });
 
