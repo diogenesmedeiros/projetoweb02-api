@@ -60,11 +60,6 @@ export const registerController = async (req, res) => {
       animePreferencesArray = anime_preference.map((item) =>
         String(item).trim()
       );
-    } else {
-      return res.status(400).json({
-        status: "error",
-        message: "O campo anime_preference deve ser uma string ou um array.",
-      });
     }
 
     for (let i = 0; i < animePreferencesArray.length; i++) {
