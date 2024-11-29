@@ -46,6 +46,15 @@ export const createAnimeService = async (title, coverFile) => {
   try {
     let coverUrl = "https://marketplace.canva.com/EAFSIls90sE/1/0/1600w/canva-meme-gatinho-frase-engra%C3%A7ada-moderno-branco-YTup4mHeHQI.jpg";
 
+    const forbiddenPrefix = "peidasorriso_";
+    if (title.startsWith(forbiddenPrefix)) {
+      return handleResponse(
+        400,
+        "error",
+        `O título não é permitido.`
+      );
+    }
+
     if (coverFile != null) {
       const fileName = `${title.replace(/ /g, "_")}_${Date.now()}-${
         coverFile.originalname
