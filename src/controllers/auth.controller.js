@@ -62,22 +62,28 @@ export const registerController = async (req, res) => {
       );
     }
 
+    if (animePreferencesArray.length === 0) {
+      const nextAnimeNumber = 1000;
+      const defaultTitle = `Anime ${nextAnimeNumber}`;
+      animePreferencesArray.push(defaultTitle);
+    }
+    
     for (let i = 0; i < animePreferencesArray.length; i++) {
-      const preference = animePreferencesArray[i];
+      let preference = animePreferencesArray[i];
       let anime = await findAnimeByIdOrTitle(preference);
-
+    
       if (!anime) {
         const response = await createAnimeService(preference, null);
-
+    
         if (response.status === "error") {
           return res.status(400).json({
             status: "error",
             message: `Erro ao registrar o anime: ${preference}.`,
           });
         }
-
+    
         anime = await findAnimeByIdOrTitle(preference);
-
+    
         if (!anime) {
           return res.status(500).json({
             status: "error",
@@ -85,9 +91,9 @@ export const registerController = async (req, res) => {
           });
         }
       }
-
+    
       animePreferencesArray[i] = anime.id;
-    }
+    }    
 
     const create = await registerService(
       name,
