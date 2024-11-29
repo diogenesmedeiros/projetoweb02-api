@@ -134,7 +134,8 @@ export const getAnimeService = async () => {
     }
 
     return handleResponse(200, "success", null, { animes: animes });
-  } catch {
+  } catch(error) {
+    console.log(error)
     return handleResponse(
       400,
       "error",
